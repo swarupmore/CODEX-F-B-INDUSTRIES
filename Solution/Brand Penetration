@@ -1,0 +1,29 @@
+# Which age group prefers energy drinks more?
+
+select age, count(respondent_id) 
+	from dim_respondents
+		group by age
+			order by count(respondent_id) desc
+
+
+# What do people think about our brand? (overall rating)
+
+select 
+Current_brands, 
+Brand_perception , 
+count(Brand_perception) As feedback_count , 
+round(100*count(Brand_perception)/ sum(count(Brand_perception)) over (),2) as "%feedback_count"
+from fact_survey_responses
+where current_brands = "Codex"
+group by Brand_perception 
+order by feedback_count desc
+
+
+# Add city id to fact_survey_responses table view
+
+create view fact_survey_responses_cityid
+as
+select r.city_id, sr.* 
+from dim_respondents r join fact_survey_responses sr
+using (respondent_id)
+ 
