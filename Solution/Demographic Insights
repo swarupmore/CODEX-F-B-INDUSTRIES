@@ -1,0 +1,35 @@
+# Which age group prefers energy drinks more?
+
+select age, count(respondent_id) 
+	from dim_respondents
+		group by age
+			order by count(respondent_id) desc
+
+# Who prefers energy drinks more? (male/ female/ non-binary)
+
+select gender as Gender, count(respondent_id) as `Total Respondents`
+	from dim_respondents
+		group by gender 
+			order by count(respondent_id) desc
+
+
+# Marketing channels by reach
+
+
+with cte1 as
+(
+select  r.age, 
+			rs.marketing_channels as `Marketing Channels`,
+            count(rs.respondent_id) as `Total Respondents`, 
+            dense_rank() over(partition by r.age order by count(rs.respondent_id) desc) as rank1
+	from dim_respondents r join fact_survey_responses rs
+     using(respondent_id) 
+     where Age in ("15-18", "19-30")
+      group by Age, `Marketing Channels`
+      order by  count(rs.respondent_id) desc
+      )
+select age as "Age",  `Marketing Channels`, `Total Respondents` from cte1 
+	where `Total Respondents` in 
+		(select max(`Total Respondents`) from cte1	
+         group by age
+			) and rank1 = 1
