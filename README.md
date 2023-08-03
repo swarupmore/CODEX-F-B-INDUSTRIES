@@ -43,3 +43,6 @@ Data analysis to derive meaningful insights and identify trends.
 
 Utilizing Power BI for data visualization and logical thinking
 
+Link to [Presentation Video](https://www.linkedin.com/feed/update/urn:li:activity:7085899451176747008/)
+
+
